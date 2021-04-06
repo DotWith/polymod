@@ -225,7 +225,6 @@ class CSVParseFormat implements BaseParseFormat {
 	public function print(csv:polymod.format.CSV):String {
 		var buf = new StringBuf();
 
-		var lf = 0x0A;
 		var dq = 0x22;
 
 		for (i in 0...csv.fields.length) {
@@ -250,7 +249,7 @@ class CSVParseFormat implements BaseParseFormat {
 				if (quotedCells) {
 					buf.addChar(dq);
 				}
-				Utf8.iter(cell, function(char:Int) {
+				Custom.iter(cell, function(char:Int) {
 					buf.addChar(char);
 				});
 				if (quotedCells) {
@@ -332,7 +331,7 @@ class TSVParseFormat implements BaseParseFormat {
 			var row = grid[iy];
 			for (ix in 0...row.length) {
 				var cell = row[ix];
-				Utf8.iter(cell, function(char:Int) {
+				Custom.iter(cell, function(char:Int) {
 					buf.addChar(char);
 				});
 				if (ix != row.length - 1) {

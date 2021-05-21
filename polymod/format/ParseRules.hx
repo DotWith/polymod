@@ -549,7 +549,7 @@ class JSONParseFormat implements BaseParseFormat {
 		}
 
 		if (Reflect.hasField(merge, "merge")) {
-			if (Std.is(merge.merge, Array)) {
+			if (Std.isOfType(merge.merge, Array)) {
 				var merge:Array<JsonMergeEntry> = merge.merge;
 				for (entry in merge) {
 					var target = null;
@@ -645,7 +645,7 @@ class JSONParseFormat implements BaseParseFormat {
 				Reflect.setField(obj, target, payload);
 			}
 		} else {
-			if (Std.is(obj, Array)) {
+			if (Std.isOfType(obj, Array)) {
 				var arr:Array<Dynamic> = cast obj;
 				if (arr.length > arrIndex) {
 					var baseObject = arr[arrIndex];
@@ -664,10 +664,10 @@ class JSONParseFormat implements BaseParseFormat {
 	}
 
 	private function _mergeObjects(a:Dynamic, b:Dynamic, signatureSoFar:String = ""):Dynamic {
-		if (Std.is(a, Array) && Std.is(b, Array)) {
+		if (Std.isOfType(a, Array) && Std.isOfType(b, Array)) {
 			// if they are both arrays, stomp with b's values
 			return b;
-		} else if (!Std.is(a, Array) && !Std.is(b, Array)) {
+		} else if (!Std.isOfType(a, Array) && !Std.isOfType(b, Array)) {
 			var aPrimitive = isPrimitive(a);
 			var bPrimitive = isPrimitive(b);
 			if (aPrimitive && bPrimitive) {
@@ -693,8 +693,8 @@ class JSONParseFormat implements BaseParseFormat {
 			}
 		} else {
 			// if they're incompatible types, return a
-			var aArr = Std.is(a, Array) ? "array" : "object";
-			var bArr = Std.is(b, Array) ? "array" : "object";
+			var aArr = Std.isOfType(a, Array) ? "array" : "object";
+			var bArr = Std.isOfType(b, Array) ? "array" : "object";
 			Polymod.warning(MERGE, "JSON can't merge @ (" + signatureSoFar + ") because base is (" + aArr + ") but payload is (" + bArr + ")");
 		}
 		return a;
@@ -702,13 +702,13 @@ class JSONParseFormat implements BaseParseFormat {
 
 	private function copyVal(a:Dynamic):Dynamic {
 		var b:Dynamic = null;
-		if (Std.is(a, Int))
+		if (Std.isOfType(a, Int))
 			b = Std.int(a);
-		if (Std.is(a, Float))
+		if (Std.isOfType(a, Float))
 			b = cast(a, Float);
-		if (Std.is(a, String))
+		if (Std.isOfType(a, String))
 			b = Std.string(b);
-		if (Std.is(a, Bool))
+		if (Std.isOfType(a, Bool))
 			b = (a == true);
 		else
 			b = Std.string(a);
@@ -716,13 +716,13 @@ class JSONParseFormat implements BaseParseFormat {
 	}
 
 	private function isPrimitive(a:Dynamic):Bool {
-		if (Std.is(a, String))
+		if (Std.isOfType(a, String))
 			return true;
-		if (Std.is(a, Float))
+		if (Std.isOfType(a, Float))
 			return true;
-		if (Std.is(a, Int))
+		if (Std.isOfType(a, Int))
 			return true;
-		if (Std.is(a, Bool))
+		if (Std.isOfType(a, Bool))
 			return true;
 		return false;
 	}
@@ -766,7 +766,7 @@ class JSONParseFormat implements BaseParseFormat {
 		}
 		if (target.arrayIndeces.length > 0) {
 			struct.next = next;
-			if (Std.is(next, Array)) {
+			if (Std.isOfType(next, Array)) {
 				var arr:Array<Dynamic> = cast next;
 				var arrIndeces = target.arrayIndeces.copy();
 				var done = false;
@@ -778,7 +778,7 @@ class JSONParseFormat implements BaseParseFormat {
 						next = arr[arrIndex];
 						struct.next = next;
 						struct.arrIndex = arrIndex;
-						if (Std.is(next, Array)) {
+						if (Std.isOfType(next, Array)) {
 							arr = cast next;
 						} else {
 							Polymod.warning(MERGE, "JSON merge error : invalid array access [" + arrIndex + "] on target \"" + signatureSoFar + "\"");
